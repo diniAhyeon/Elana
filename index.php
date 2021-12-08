@@ -1,5 +1,8 @@
 <?php
 include_once("includes/mysql_connect.php");
+include_once("includes/shopify.php");
+
+$shopify = new Shopify();
 
 $parameters = $_GET;
 
@@ -15,3 +18,14 @@ if($result->num_rows <1){
 // Use fetch assoc functioon to get the record
 $store_date = $result->fetch_assoc();
 echo print_r($store_data);
+
+//check if shopify.php is working
+$shopify->set_url($parameters['shop']);
+$shopify->set_token($store_data['access_toke']);
+
+echo $shopify->get_url();
+echo '<br/>';
+echo $shopify->get_token();
+
+$products = $shopify->rest_api('/adminapi/2021-04/products.json', array(), 'GET');
+echo print_r($products['body']);
